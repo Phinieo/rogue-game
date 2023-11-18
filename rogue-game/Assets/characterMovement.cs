@@ -5,19 +5,43 @@ using UnityEngine.InputSystem;
 
 public class characterMovement : MonoBehaviour
 {
+
+
+
     public float moveSpeed = 30f; // Adjust this value to control the movement speed.
     public float rotationSpeed = 5f;
+
+
+    public GameObject feet, head;
 
 
     private Vector2 moveDirection;
     private Vector2 rotationDirection;
 
     private Rigidbody2D rb;
+    private Animator animator;
 
     private void Start()
     {
         
         rb = GetComponent<Rigidbody2D>();
+
+        animator = GetComponent<Animator>();
+
+
+        if (feet == null)
+        {
+
+            feet = transform.Find("Feet").gameObject;
+
+        }
+
+        if (head == null)
+        {
+
+            head = transform.Find("Head").gameObject;
+
+        }
 
     }
 
@@ -46,6 +70,16 @@ public class characterMovement : MonoBehaviour
 
             rb.AddForce(directionIn * moveSpeed);
 
+            float angle = Mathf.Atan2(directionIn.y, directionIn.x) * Mathf.Rad2Deg + 90;
+
+            // Create a rotation based on the angle.
+            Quaternion rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+
+            // Apply the rotation to your character.
+            //transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+
+            feet.transform.rotation = rotation;
+
         }
 
 
@@ -65,7 +99,7 @@ public class characterMovement : MonoBehaviour
             // Apply the rotation to your character.
             //transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
 
-            transform.rotation = rotation;
+            head.transform.rotation = rotation;
 
         }
 
@@ -77,7 +111,24 @@ public class characterMovement : MonoBehaviour
         move(moveDirection);
         look(rotationDirection);
 
+        if (rb.velocity.magnitude > 0.1f)
+        {
+
+            animator.SetBool("IsWalking", true);
+            animator.speed = (rb.velocity.magnitude / moveSpeed) * 10;
+
+        }
+        else
+        {
+
+        //    animator.SetBool("IsWalking", false);
+            animator.speed = 0.0f;
+
+
+        }
+
     }
+
 
 
 }
