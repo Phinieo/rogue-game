@@ -111,21 +111,7 @@ public class characterMovement : MonoBehaviour
         move(moveDirection);
         look(rotationDirection);
 
-        if (rb.velocity.magnitude > 0.1f)
-        {
-
-            animator.SetBool("IsWalking", true);
-            animator.speed = (rb.velocity.magnitude / moveSpeed) * 10;
-
-        }
-        else
-        {
-
-        //    animator.SetBool("IsWalking", false);
-            animator.speed = 0.0f;
-
-
-        }
+        animator.speed = (rb.velocity.magnitude / moveSpeed) * 40f;
 
     }
 
